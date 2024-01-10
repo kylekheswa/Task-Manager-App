@@ -1,0 +1,16 @@
+Total number of users: 2
+Total number of tasks: 3
+User: admin
+Total number of tasks assigned: 2
+Percentage of total tasks assigned: 66.67%
+Percentage of completed tasks: 50.00%
+Percentage of uncompleted tasks: 50.00%
+Percentage of overdue tasks: 50.00%
+
+User: kyle
+Total number of tasks assigned: 1
+Percentage of total tasks assigned: 33.33%
+Percentage of completed tasks: 0.00%
+Percentage of uncompleted tasks: 100.00%
+Percentage of overdue tasks: 0.00%
+
