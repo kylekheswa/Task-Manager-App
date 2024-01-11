@@ -1,15 +1,43 @@
 import datetime
-
+import hashlib
 # Dictionary to store user credentials
 users = {}
 
 # List to store task data
 tasks = []
 
+
+
+# Function to hash a password
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+# Function to check if a username and password match
+def check_credentials(username, password):
+    return username in users and users[username] == hash_password(password)
+
+# During user registration, store the hashed password
+def register_user(users):
+    while True:
+        new_username = input("Enter a new username: ")
+        
+        if username_exists(new_username, users):
+            print("Username already exists.")
+        else:
+            new_password = input("Enter a new password: ")
+            confirm_password = input("Confirm the password: ")
+
+            if new_password == confirm_password:
+                users[new_username] = hash_password(new_password)
+                with open('user.txt', 'a') as user_file:
+                    user_file.write(f"{new_username}, {hash_password(new_password)}\n")
+                print("User registered successfully!")
+                break
+            else:
+                print("Passwords do not match.")
+
+# During login, compare the hashed password
 def login():
-    """
-    Function to log in to the application.
-    """
     username = input("Enter your username: ")
     password = input("Enter your password: ")
 
@@ -19,7 +47,7 @@ def login():
             user_data = line.strip().split(', ')
             users[user_data[0]] = user_data[1]
 
-    if username in users and users[username] == password:
+    if check_credentials(username, password):
         print("Login successful!")
         return username
     else:
