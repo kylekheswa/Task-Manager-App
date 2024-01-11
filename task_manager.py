@@ -1,12 +1,25 @@
 import datetime
 import hashlib
+
 # Dictionary to store user credentials
 users = {}
 
-# List to store task data
+class Task:
+    def __init__(self, assigned_to, title, description, due_date, status='No'):
+        self.assigned_to = assigned_to
+        self.title = title
+        self.description = description
+        self.assigned_date = datetime.datetime.now().strftime('%d %b %Y')
+        self.due_date = due_date
+        self.status = status
+
+    def __str__(self):
+        return f"Assigned to: {self.assigned_to}\nTitle: {self.title}\nDescription: {self.description}\n" \
+               f"Assigned Date: {self.assigned_date}\nDue Date: {self.due_date}\nStatus: {self.status}\n"
+
+
+# List to store task instances
 tasks = []
-
-
 
 # Function to hash a password
 def hash_password(password):
@@ -58,16 +71,16 @@ def login():
 with open('tasks.txt', 'r') as task_file:
     for line in task_file:
         task_data = line.strip().split(', ')
-        tasks.append(task_data)
+        tasks.append(Task(*task_data))
 
 def edit_task(username, task_title_to_edit):
     """
     Function to edit a task.
     """
     for task in tasks:
-        if task[0] == username and task[1] == task_title_to_edit:
+        if task.assigned_to == username and task.title == task_title_to_edit:
             new_status = input("Enter the new status (Yes/No): ")
-            task[5] = new_status
+            task.status = new_status
             print("Task edited successfully!")
             break
     else:
@@ -78,9 +91,9 @@ def generate_task_overview():
     Function to generate task_overview.txt.
     """
     total_tasks = len(tasks)
-    completed_tasks = sum(1 for task in tasks if task[5] == 'Yes')
+    completed_tasks = sum(1 for task in tasks if task.status == 'Yes')
     uncompleted_tasks = total_tasks - completed_tasks
-    overdue_tasks = sum(1 for task in tasks if task[5] == 'No' and datetime.datetime.now() > datetime.datetime.strptime(task[4], '%d %b %Y'))
+    overdue_tasks = sum(1 for task in tasks if task.status == 'No' and datetime.datetime.now() > datetime.datetime.strptime(task.due_date, '%d %b %Y'))
     overdue_percentage = (overdue_tasks / total_tasks) * 100 
     incomplete_percentage = (uncompleted_tasks / total_tasks) * 100 
     # Write task overview data to task_overview.txt
